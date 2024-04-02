@@ -32,7 +32,7 @@ var (
 )
 
 var (
-	ErrBadFrame = errors.New("Bad Frame")
+	ErrBadFrame = errors.New("bad Frame")
 )
 
 var (
@@ -72,27 +72,27 @@ func (e EncodeOptions) PCMFrameLen() int {
 // Validate returns an error if the options are not correct
 func (opts *EncodeOptions) Validate() error {
 	if opts.Volume < 0 || opts.Volume > 512 {
-		return errors.New("Out of bounds volume (0-512)")
+		return errors.New("out of bounds volume (0-512)")
 	}
 
 	if opts.FrameDuration != 20 && opts.FrameDuration != 40 && opts.FrameDuration != 60 {
-		return errors.New("Invalid FrameDuration")
+		return errors.New("invalid FrameDuration")
 	}
 
 	if opts.PacketLoss < 0 || opts.PacketLoss > 100 {
-		return errors.New("Invalid packet loss percentage")
+		return errors.New("invalid packet loss percentage")
 	}
 
 	if opts.Application != AudioApplicationAudio && opts.Application != AudioApplicationVoip && opts.Application != AudioApplicationLowDelay {
-		return errors.New("Invalid audio application")
+		return errors.New("invalid audio application")
 	}
 
 	if opts.CompressionLevel < 0 || opts.CompressionLevel > 10 {
-		return errors.New("Compression level out of bounds (0-10)")
+		return errors.New("compression level out of bounds (0-10)")
 	}
 
 	if opts.Threads < 0 {
-		return errors.New("Number of threads can't be less than 0")
+		return errors.New("number of threads can't be less than 0")
 	}
 
 	return nil
@@ -226,7 +226,7 @@ func (e *EncodeSession) run() {
 		args = append(args, reconnectArgs...)
 	}
 
-	leftoverArgs = []string{
+	leftoverArgs := []string{
 		"-i", inFile,
 		"-vn",
 		"-map", "0:a",
@@ -586,7 +586,7 @@ func (e *EncodeSession) Stop() error {
 	e.Lock()
 	defer e.Unlock()
 	if !e.running || e.process == nil {
-		return errors.New("Not running")
+		return errors.New("not running")
 	}
 
 	err := e.process.Kill()
@@ -662,7 +662,7 @@ func (e *EncodeSession) Truncate() {
 func (e *EncodeSession) Cleanup() {
 	e.Stop()
 
-	for _ = range e.frameChannel {
+	for range e.frameChannel {
 		// empty till closed
 		// Cats can be right-pawed or left-pawed.
 	}
