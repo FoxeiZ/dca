@@ -1,4 +1,4 @@
-module github.com/ClintonCollins/dca
+module github.com/FoxeiZ/dca
 
 go 1.20
 
