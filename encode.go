@@ -212,6 +212,21 @@ func (e *EncodeSession) run() {
 	// Launch ffmpeg with a variety of different fruits and goodies mixed togheter
 	args := []string{
 		"-stats",
+	}
+
+	// Only add reconnect args if we're streaming from a URL
+	if e.isURL {
+		reconnectArgs := []string{
+			"-reconnect", "1",
+			"-reconnect_on_network_error", "1",
+			"-reconnect_on_http_error", "1",
+			"-reconnect_streamed", "1",
+			"-reconnect_delay_max", "5",
+		}
+		args = append(args, reconnectArgs...)
+	}
+
+	leftoverArgs = []string{
 		"-i", inFile,
 		"-vn",
 		"-map", "0:a",
@@ -228,18 +243,7 @@ func (e *EncodeSession) run() {
 		"-threads", strconv.Itoa(e.options.Threads),
 		"-ss", strconv.Itoa(e.options.StartTime),
 	}
-
-	// Only add reconnect args if we're streaming from a URL
-	if e.isURL {
-		reconnectArgs := []string{
-			"-reconnect", "1",
-			"-reconnect_on_network_error", "1",
-			"-reconnect_on_http_error", "1",
-			"-reconnect_streamed", "1",
-			"-reconnect_delay_max", "5",
-		}
-		args = append(args, reconnectArgs...)
-	}
+	args = append(args, leftoverArgs...)
 
 	var filters []string
 	// If using the new VolumeFloat option, use that instead of the old Volume option.
