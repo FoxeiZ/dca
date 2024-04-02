@@ -41,7 +41,7 @@ var (
 
 // EncodeOptions is a set of options for encoding dca
 type EncodeOptions struct {
-	Volume           int              // change audio volume (256=normal)
+	Volume           int              // change audio volume (100=normal)
 	Channels         int              // audio channels
 	FrameRate        int              // audio sampling rate (ex 48000)
 	FrameDuration    int              // audio frame duration can be 20, 40, or 60 (ms)
@@ -100,7 +100,7 @@ func (opts *EncodeOptions) Validate() error {
 
 // StdEncodeOptions is the standard options for encoding
 var StdEncodeOptions = &EncodeOptions{
-	Volume:           256,
+	Volume:           100,
 	Channels:         2,
 	FrameRate:        48000,
 	FrameDuration:    20,
@@ -248,9 +248,9 @@ func (e *EncodeSession) run() {
 	var filters []string
 	// If using the new VolumeFloat option, use that instead of the old Volume option.
 	if e.options.VolumeFloat == 0.0 {
-		filters = []string{fmt.Sprintf("volume=%d", e.options.Volume)}
+		filters = []string{fmt.Sprintf("volume=%.2f", float32(e.options.Volume)/100.0)}
 	} else {
-		filters = []string{fmt.Sprintf(`volume=%.2f`, e.options.VolumeFloat/10)}
+		filters = []string{fmt.Sprintf(`volume=%.2f`, e.options.VolumeFloat)}
 	}
 	if e.options.AudioFilter != "" {
 		// Lit af
