@@ -14,10 +14,10 @@ const (
 	FormatVersion int8 = 1
 
 	// The current version of the DCA program
-	LibraryVersion string = "0.0.5"
+	LibraryVersion string = "0.0.6"
 
 	// The URL to the GitHub repository of DCA
-	GitHubRepositoryURL string = "https://github.com/jonas747/dca"
+	GitHubRepositoryURL string = "https://github.com/FoxeiZ/dca"
 )
 
 type OpusReader interface {
@@ -37,17 +37,8 @@ func logln(s ...interface{}) {
 	log.Println(s...)
 }
 
-// logln logs to assigned logger or standard logger
-func logf(format string, a ...interface{}) {
-	if Logger != nil {
-		Logger.Printf(format, a...)
-		return
-	}
-	log.Printf(format, a...)
-}
-
 var (
-	ErrNegativeFrameSize = errors.New("Frame size is negative, possibly corrupted.")
+	ErrNegativeFrameSize = errors.New("frame size is negative, possibly corrupted")
 )
 
 // DecodeFrame decodes a dca frame from an io.Reader and returns the raw opus audio ready to be sent to discord

@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ErrVoiceConnClosed = errors.New("Voice connection closed")
+	ErrVoiceConnClosed = errors.New("voice connection closed")
 )
 
 // StreamingSession provides an easy way to directly transmit opus audio
@@ -54,7 +54,6 @@ func (s *StreamingSession) stream() {
 	if s.running {
 		s.Unlock()
 		panic("Stream is already running!")
-		return
 	}
 	s.running = true
 	s.Unlock()
