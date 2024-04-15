@@ -57,6 +57,10 @@ type EncodeOptions struct {
 	// The ffmpeg audio filters to use, see https://ffmpeg.org/ffmpeg-filters.html#Audio-Filters for more info
 	// Leave empty to use no filters.
 	AudioFilter string
+
+	// Extra arguments to pass to ffmpeg
+	BeforeInputArgs []string
+	AfterInputArgs  []string
 }
 
 func (e EncodeOptions) PCMFrameLen() int {
@@ -209,6 +213,9 @@ func (e *EncodeSession) run() {
 		"-stats",
 	}
 
+	// Add extra arguments. This one is before the '-i' argument
+	args = append(args, e.options.BeforeInputArgs...)
+
 	// Only add reconnect args if we're streaming from a URL
 	if e.isURL {
 		reconnectArgs := []string{
@@ -239,6 +246,9 @@ func (e *EncodeSession) run() {
 		"-ss", strconv.Itoa(e.options.StartTime),
 	}
 	args = append(args, leftoverArgs...)
+
+	// Add extra arguments. This one is after the '-i' argument
+	args = append(args, e.options.AfterInputArgs...)
 
 	var filters []string
 	// If using the new VolumeFloat option, use that instead of the old Volume option.
