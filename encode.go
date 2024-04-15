@@ -57,8 +57,6 @@ type EncodeOptions struct {
 	// The ffmpeg audio filters to use, see https://ffmpeg.org/ffmpeg-filters.html#Audio-Filters for more info
 	// Leave empty to use no filters.
 	AudioFilter string
-
-	Comment string // Leave a comment in the metadata
 }
 
 func (e EncodeOptions) PCMFrameLen() int {
@@ -379,11 +377,10 @@ func (e *EncodeSession) writeMetadataFrame() {
 		}
 
 		metadata.SongInfo = &SongMetadata{
-			Title:    ffprobeData.Format.Tags.Title,
-			Artist:   ffprobeData.Format.Tags.Artist,
-			Album:    ffprobeData.Format.Tags.Album,
-			Genre:    ffprobeData.Format.Tags.Genre,
-			Comments: e.options.Comment,
+			Title:  ffprobeData.Format.Tags.Title,
+			Artist: ffprobeData.Format.Tags.Artist,
+			Album:  ffprobeData.Format.Tags.Album,
+			Genre:  ffprobeData.Format.Tags.Genre,
 		}
 
 		metadata.Origin = &OriginMetadata{
