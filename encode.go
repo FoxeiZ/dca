@@ -3,13 +3,10 @@ package dca
 import (
 	"bufio"
 	"bytes"
-	"encoding/base64"
 	"encoding/binary"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"image/jpeg"
-	"image/png"
 	"io"
 	"os"
 	"os/exec"
@@ -397,38 +394,6 @@ func (e *EncodeSession) writeMetadataFrame() {
 		}
 
 		cmdBuf.Reset()
-
-		// get cover art
-		cover := exec.Command("ffmpeg", "-loglevel", "0", "-i", e.filePath, "-f", "singlejpeg", "pipe:1")
-		cover.Stdout = &cmdBuf
-
-		err = cover.Start()
-		if err != nil {
-			logln("RunStart Error:", err)
-			return
-		}
-		var pngBuf bytes.Buffer
-		err = cover.Wait()
-		if err == nil {
-			buf := bytes.NewBufferString(cmdBuf.String())
-			var coverImage string
-			if e.options.CoverFormat == "png" {
-				img, err := jpeg.Decode(buf)
-				if err == nil { // silently drop it, no image
-					err = png.Encode(&pngBuf, img)
-					if err == nil {
-						coverImage = base64.StdEncoding.EncodeToString(pngBuf.Bytes())
-					}
-				}
-			} else {
-				coverImage = base64.StdEncoding.EncodeToString(cmdBuf.Bytes())
-			}
-
-			metadata.SongInfo.Cover = &coverImage
-		}
-
-		cmdBuf.Reset()
-		pngBuf.Reset()
 	} else {
 		metadata.Origin = &OriginMetadata{
 			Source:   "pipe",
