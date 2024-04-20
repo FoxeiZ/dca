@@ -73,7 +73,7 @@ func (s *StreamingSession) stream() {
 		s.Unlock()
 
 		err := s.readNext()
-		if err != nil {
+		if s.finished || err != nil {
 			s.Lock()
 
 			s.finished = true
@@ -182,4 +182,10 @@ func (s *StreamingSession) Paused() bool {
 	s.Unlock()
 
 	return p
+}
+
+func (s *StreamingSession) FinishNow() {
+	s.Lock()
+	s.finished = true
+	s.Unlock()
 }
